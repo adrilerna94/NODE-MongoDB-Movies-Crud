@@ -9,16 +9,21 @@ export interface IMovieModel extends IMovie, Document {
 }
 
 const movieSchema = new mongoose.Schema({
-  plot: { type: String, required: true },
+  // actualizamos Schema para hacer registro user
+  email: {type: String, required: true},
+  password: {type: String, required: true},
+  username: {type: String, required: true},
+  // propiedades movie
+  plot: { type: String, required: false },
   genres: { type: [String], required: false },
   runtime: { type: Number, required: false, min: 1 },
   cast: { type: [String], required: false },
   poster: { type: String, required: false },
-  title: { type: String, required: true },
+  title: { type: String, required: false },
   fullplot: { type: String, required: false },
   languages: { type: [String], required: false },
-  released: { type: Date, required: true },
-  directors: { type: [String], required: true },
+  released: { type: Date, required: false },
+  directors: { type: [String], required: false },
   rated: { type: String, required: false },
   awards: { type: Object, required: false },
   lastupdated: { type: String, required: false },
