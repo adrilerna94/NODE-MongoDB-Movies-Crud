@@ -9,6 +9,12 @@ import { validate, ValidationSource } from '../middlewares/validate.middleware';
 const movieController = new MovieController();
 export const movieRouter = Router();
 
+// register
+movieRouter.post('/register', validate(MovieValidator.movieRegisterSchema, ValidationSource.BODY), movieController.register);
+
+//login
+movieRouter.post('/login', validate(MovieValidator.movieLoginSchema, ValidationSource.BODY), movieController.login);
+
 movieRouter.get('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), movieController.getById);
 movieRouter.get('/', validate(MovieValidator.moviePaginationSchema, ValidationSource.QUERY), movieController.getAll);
 movieRouter.post('/', validate(MovieValidator.movieSchema, ValidationSource.BODY), movieController.create);

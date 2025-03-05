@@ -4,7 +4,12 @@
 import { httpStatus } from '../config/httpStatusCodes';
 import { AppError } from '../utils/application.error';
 import { MovieRepository } from '../repositories/movie.repository';
+import bcrypt from 'bcrypt';
 import { IMovie } from '../types/movie.interface';
+import { IRegister } from '../types/register.interface';
+import { hashPassword } from '../utils/auth/hash';
+import { ILogin } from '../types/login.interface';
+import { formatJwtTimestamp, generateAccessToken, parseJwt } from '../utils/auth/token';
 
 export class MovieService {
   private movieRepository: MovieRepository;
@@ -13,6 +18,55 @@ export class MovieService {
     this.movieRepository = new MovieRepository();
   }
 
+  register = async (user: IRegister) => {
+    const userExists = await this.movieRepository.findByEmail(user.email);
+    if (userExists) {
+      throw new AppError(`User with email ${user.email} already exists. Please log in`, 409);
+    }
+    const hashedPassword = await hashPassword(user);
+    const newUser:IRegister = {
+      username: user.username,
+      email: user.email,
+      password: hashedPassword,
+    };
+    return this.movieRepository.register(newUser);
+  }
+
+  login = async (userData: ILogin) => {
+    const user = await this.movieRepository.findByEmail(userData.email);
+    if (!user){
+        throw new AppError('User not Found. Please Register', httpStatus.NOT_FOUND);
+    }
+
+    // Check hashedPassword in DB with UserPassword
+    const isMatch = await bcrypt.compare(userData.password, user.password);
+    if (!isMatch) {
+        throw new AppError('Invalid Credentials', httpStatus.UNAUTHORIZED);
+    }
+
+    // Generate JWT Token
+    const accessToken = generateAccessToken(userData);
+
+    // Decodificar el accessToken con seguridad
+    const decodedAccessToken = parseJwt(accessToken);
+
+    // Formatear fechas
+    const formattedAccessToken = {
+      token: accessToken,
+      issuedAt: formatJwtTimestamp(decodedAccessToken.iat),
+      expiresAt: formatJwtTimestamp(decodedAccessToken.exp)
+    };
+
+    return {
+        accessToken: formattedAccessToken,
+        user: {
+            id: user._id as unknown as string,
+            email: user.email,
+            username: user.username
+        }
+    };
+  }
+  
   getById = async (id: string) => {
     const movie = await this.movieRepository.getById(id);
     if (!movie) {

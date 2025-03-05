@@ -1,30 +1,6 @@
 // Defines the structure of a Movie object using a TypeScript interface.
 // Ensures type safety throughout the application when working with movies.
 
-// export interface IMovie {
-//   plot: string;
-//   genres: string[];
-//   runtime: number;
-//   cast: string[];
-//   poster: string;
-//   title: string;
-//   fullplot: string;
-//   languages: string[];
-//   released: Date;
-//   directors: string[];
-//   rated: string;
-//   awards: object;
-//   lastupdated: string;
-//   year: number;
-//   imdb: object;
-//   countries: string[];
-//   type: 'movie' | 'series' | 'documentary';
-//   tomatoes: object;
-//   num_mflix_comments: number;
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }
-
 export interface IMovie {
   title: string; // ✅ Obligatorio
   plot: string; // ✅ Obligatorio

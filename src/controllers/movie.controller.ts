@@ -15,6 +15,49 @@ export class MovieController {
     this.movieService = new MovieService();
   }
 
+  /* 🛠️ SOLUCIÓN EXPLICADA 🛠️
+      ✅ `user?.username || 'newUser'`
+        - 🔍 Si `user` es `null` o `undefined`, evita errores al acceder a `.username`.
+        - 🔄 Si `user.username` es `undefined`, `null` o `""`, usa `'newUser'` como valor predeterminado.
+
+      ✅ `[username]: user` (Computed Property)
+        - 🏷️ Usa `username` como **clave dinámica** en el objeto.
+        - 📌 Si `username = "JohnDoe"`, la salida será:
+          ```json
+          {
+            "message": "JohnDoe successfully registered",
+            "JohnDoe": { "username": "JohnDoe", "email": "john@example.com" }
+          }
+          ```
+        - ⚡ Hace que la clave del objeto se adapte al nombre de usuario.
+  */
+  register = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await this.movieService.register(req.body);
+      const username : string = user?.username || 'newUser';
+      const response = {
+        message: `${username} successfully registered`,
+        [username]: user
+      }
+      res.send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await this.movieService.login(req.body);
+      const email : string = data.user?.email || 'newUser';
+      const response = {
+        message: `${email} successfully log in`,
+        [email]: data
+      }
+      res.send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const movie = await this.movieService.getById(req.params.id);
