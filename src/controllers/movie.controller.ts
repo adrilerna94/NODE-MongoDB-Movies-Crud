@@ -6,6 +6,7 @@ import { NextFunction, type Request, type Response } from 'express';
 // import { httpStatus } from '../config/httpStatusCodes';
 import { MovieService } from '../services/movie.service';
 import { httpStatus } from '../config/httpStatusCodes';
+import { CustomRequest } from '../interfaces/customRequest.interface';
 // import { Http2ServerResponse } from 'http2';
 
 export class MovieController {
@@ -80,12 +81,11 @@ export class MovieController {
     }
   };
 
-  create = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
       const newMovie = await this.movieService.createMovie({
         ...req.body,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        userId: (req as any).userId // ✅ Ahora lo tomamos de `req
+        userId: req.userId // ✅ Ahora lo tomamos de `req
       });
       const response = {
         message: 'Movie created successfully',
@@ -97,10 +97,13 @@ export class MovieController {
     }
   };
 
-  update = async (req: Request, res: Response, next: NextFunction) => {
+  update = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const newMovie = req.body;
+      const newMovie = {
+        ...req.body,
+        userId: req.userId
+      };
       const movie = await this.movieService.updateMovie(id, newMovie);
       const response = {
         message: 'Movie Updated successfully',
@@ -112,16 +115,11 @@ export class MovieController {
       next(error);
     }
   }
-  delete = async (req: Request, res: Response, next: NextFunction) => {
+  delete = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const { userId } = req.body;
+      const userId = req.userId!; //not null
       await this.movieService.deleteMovie(id, userId);
-      // const response = {
-      //   message: 'Movie Deleted successfully',
-      //   movieToDelete
-      // };
-      // res.send(response)
       res.status(httpStatus.NO_CONTENT).end();
     } catch (error) {
       next(error);

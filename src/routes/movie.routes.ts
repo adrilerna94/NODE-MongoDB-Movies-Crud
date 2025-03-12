@@ -12,7 +12,7 @@ export const movieRouter = Router();
 
 movieRouter.get('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), movieController.getById);
 movieRouter.get('/', validate(MovieValidator.moviePaginationSchema, ValidationSource.QUERY), movieController.getAll);
-movieRouter.post('/', checkToken, movieController.create);
+movieRouter.post('/', checkToken, validate(MovieValidator.movieSchema, ValidationSource.BODY), movieController.create);
 movieRouter.put('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), validate(MovieValidator.movieSchema, ValidationSource.BODY), checkToken, movieController.update);
 movieRouter.delete('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), checkToken, movieController.delete);
 

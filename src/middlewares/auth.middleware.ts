@@ -1,30 +1,13 @@
 // Middleware for handling authentication and authorization.
 // Includes functionality for validating tokens, ensuring protected routes, and managing user roles and permissions to restrict access as needed.
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { httpStatus } from '../config/httpStatusCodes';
 import { verifyToken } from '../utils/auth/token';
 import { AppError } from '../utils/application.error';
+import { CustomRequest } from '../interfaces/customRequest.interface';
 
-// export const checkToken = async (req: Request, res: Response, next: NextFunction) => {
-//   // extremos el token de los Headers de la request
-//   const token = req.header('Authorization')?.replace('Bearer ', '');
-//   console.log(`VERIFY TOKEN: ${token}`);
-//   if (!token) {
-//     next(new AppError('You must be logged in to access this resource.', httpStatus.UNAUTHORIZED));
-//     return;
-//   }
-//   try {
-//     const decoded = verifyToken(token);
-//     console.log("Token decodificado en middleware:", decoded);
-//     req.body.userId = decoded.id; // guarda usuario autenticado en req.body
-//     next();
-//   } catch (error) {
-//     next(new AppError('Invalid token.', httpStatus.UNAUTHORIZED));
-//   }
-// };
-
-export const checkToken = async (req: Request, res: Response, next: NextFunction) => {
+export const checkToken = async (req: CustomRequest, res: Response, next: NextFunction) => {
   let token = req.header("Authorization");
   console.log("Raw Authorization Header:", token);
 
@@ -52,7 +35,7 @@ export const checkToken = async (req: Request, res: Response, next: NextFunction
       console.log("Token decodificado en middleware:", decoded);
       // guardamos token en la request
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (req as any).userId = decoded.userId;
+      req.userId = decoded.userId;
       next();
   } catch (error) {
       console.error("Error al verificar el token:", error);
