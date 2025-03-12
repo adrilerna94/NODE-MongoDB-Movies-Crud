@@ -2,6 +2,7 @@
 // Ensures type safety throughout the application when working with movies.
 
 export interface IMovie {
+  userId: string // relacionamos movie con usuario
   title: string; // ✅ Obligatorio
   plot: string; // ✅ Obligatorio
   released: Date; // ✅ Obligatorio

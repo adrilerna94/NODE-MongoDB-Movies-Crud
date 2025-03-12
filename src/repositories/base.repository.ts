@@ -2,27 +2,37 @@
 // Can be extended by specific repositories like user.repository.ts.
 
 import { Model, ProjectionFields } from 'mongoose';
-import { IMovie } from '../types/movie.interface';
-import { IRegister } from '../types/register.interface';
+import { IMovie } from '../interfaces/movie.interface';
+import { IRegister } from '../interfaces/register.interface';
+import { IUser } from '../interfaces/user.interface';
 
 export class BaseRepository<Document> {
-  private model: Model<Document>;
+  private readonly model: Model<Document>;
   private readonly defaultProjection: ProjectionFields<Document>;
   private readonly registerProjection: ProjectionFields<Document>;
 
   constructor(model: Model<Document>) {
     this.model = model;
     this.defaultProjection = { __v: 0 };
-    this.registerProjection = { username: 1, password: 1, email: 1 };
+    this.registerProjection = { name: 1, password: 1, email: 1, _id: 1, birthday: 1 };
   }
 
-  register = async (registerUser: IRegister) => {
+  register = async (registerUser: IUser) => {
     const newUser = new this.model(registerUser);
     const savedUser = await newUser.save();
-    return this.model.findById(savedUser._id, this.registerProjection);
+    return this.model.findById(savedUser._id, this.defaultProjection);
   }
 
-  findByEmail = (email: string) => this.model.findOne({email}, this.registerProjection);
+  findByEmail = async (email: string) => {
+    const user = await this.model.findOne({ email }, this.registerProjection).lean();
+    console.log("Usuario encontrado en la BD:", user); // 🔹 Debugging
+
+    if (!user || !user._id) {
+        throw new Error("User ID is missing from database query.");
+    }
+
+    return { ...user, id: user._id.toString() }; // 🔹 Convertimos `_id` en `id` para usarlo en el token
+  };
 
   getById(id: string, projection?: ProjectionFields<Document>) {
     const projectionFields = { ...projection, ...this.defaultProjection };

@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
-import { IRegister } from '../../types/register.interface';
+import { IRegister } from '../../interfaces/register.interface';
+import { IUser } from '../../interfaces/user.interface';
 
-export const hashPassword = async (userData: IRegister) => {
+export const hashPassword = async (userData: IUser) => {
   /*
     bcrypt.genSalt(10) crea una salt (cadena aleatoria) con 10 rondas de generación.
     La salt sirve para fortalecer el hash y prevenir ataques como rainbow tables.

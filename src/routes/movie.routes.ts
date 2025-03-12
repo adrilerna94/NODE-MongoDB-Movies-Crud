@@ -5,18 +5,15 @@ import { Router } from 'express';
 import { MovieController } from '../controllers/movie.controller';
 import { MovieValidator } from '../validators/movie.validator';
 import { validate, ValidationSource } from '../middlewares/validate.middleware';
+import { checkToken } from '../middlewares/auth.middleware';
 
 const movieController = new MovieController();
 export const movieRouter = Router();
 
-// register
-movieRouter.post('/register', validate(MovieValidator.movieRegisterSchema, ValidationSource.BODY), movieController.register);
-
-//login
-movieRouter.post('/login', validate(MovieValidator.movieLoginSchema, ValidationSource.BODY), movieController.login);
-
 movieRouter.get('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), movieController.getById);
 movieRouter.get('/', validate(MovieValidator.moviePaginationSchema, ValidationSource.QUERY), movieController.getAll);
-movieRouter.post('/', validate(MovieValidator.movieSchema, ValidationSource.BODY), movieController.create);
-movieRouter.put('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), validate(MovieValidator.movieSchema, ValidationSource.BODY), movieController.update);
-movieRouter.delete('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), movieController.delete);
+movieRouter.post('/', checkToken, movieController.create);
+movieRouter.put('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), validate(MovieValidator.movieSchema, ValidationSource.BODY), checkToken, movieController.update);
+movieRouter.delete('/:id', validate(MovieValidator.movieIdSchema, ValidationSource.PARAMS), checkToken, movieController.delete);
+
+// validate(MovieValidator.movieSchema, ValidationSource.BODY)

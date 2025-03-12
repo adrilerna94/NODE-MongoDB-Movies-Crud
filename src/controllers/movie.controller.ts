@@ -31,33 +31,6 @@ export class MovieController {
           ```
         - ⚡ Hace que la clave del objeto se adapte al nombre de usuario.
   */
-  register = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const user = await this.movieService.register(req.body);
-      const username : string = user?.username || 'newUser';
-      const response = {
-        message: `${username} successfully registered`,
-        [username]: user
-      }
-      res.send(response);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  login = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const data = await this.movieService.login(req.body);
-      const email : string = data.user?.email || 'newUser';
-      const response = {
-        message: `${email} successfully log in`,
-        [email]: data
-      }
-      res.send(response);
-    } catch (error) {
-      next(error);
-    }
-  }
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const movie = await this.movieService.getById(req.params.id);
@@ -109,7 +82,11 @@ export class MovieController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const newMovie = await this.movieService.createMovie(req.body);
+      const newMovie = await this.movieService.createMovie({
+        ...req.body,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        userId: (req as any).userId // ✅ Ahora lo tomamos de `req
+      });
       const response = {
         message: 'Movie created successfully',
         data: newMovie
@@ -138,7 +115,8 @@ export class MovieController {
   delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      await this.movieService.deleteMovie(id);
+      const { userId } = req.body;
+      await this.movieService.deleteMovie(id, userId);
       // const response = {
       //   message: 'Movie Deleted successfully',
       //   movieToDelete

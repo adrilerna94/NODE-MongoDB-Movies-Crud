@@ -5,10 +5,10 @@ import { httpStatus } from '../config/httpStatusCodes';
 import { AppError } from '../utils/application.error';
 import { MovieRepository } from '../repositories/movie.repository';
 import bcrypt from 'bcrypt';
-import { IMovie } from '../types/movie.interface';
-import { IRegister } from '../types/register.interface';
+import { IMovie } from '../interfaces/movie.interface';
+import { IRegister } from '../interfaces/register.interface';
 import { hashPassword } from '../utils/auth/hash';
-import { ILogin } from '../types/login.interface';
+import { ILogin } from '../interfaces/login.interface';
 import { formatJwtTimestamp, generateAccessToken, parseJwt } from '../utils/auth/token';
 
 export class MovieService {
@@ -18,55 +18,6 @@ export class MovieService {
     this.movieRepository = new MovieRepository();
   }
 
-  register = async (user: IRegister) => {
-    const userExists = await this.movieRepository.findByEmail(user.email);
-    if (userExists) {
-      throw new AppError(`User with email ${user.email} already exists. Please log in`, 409);
-    }
-    const hashedPassword = await hashPassword(user);
-    const newUser:IRegister = {
-      username: user.username,
-      email: user.email,
-      password: hashedPassword,
-    };
-    return this.movieRepository.register(newUser);
-  }
-
-  login = async (userData: ILogin) => {
-    const user = await this.movieRepository.findByEmail(userData.email);
-    if (!user){
-        throw new AppError('User not Found. Please Register', httpStatus.NOT_FOUND);
-    }
-
-    // Check hashedPassword in DB with UserPassword
-    const isMatch = await bcrypt.compare(userData.password, user.password);
-    if (!isMatch) {
-        throw new AppError('Invalid Credentials', httpStatus.UNAUTHORIZED);
-    }
-
-    // Generate JWT Token
-    const accessToken = generateAccessToken(userData);
-
-    // Decodificar el accessToken con seguridad
-    const decodedAccessToken = parseJwt(accessToken);
-
-    // Formatear fechas
-    const formattedAccessToken = {
-      token: accessToken,
-      issuedAt: formatJwtTimestamp(decodedAccessToken.iat),
-      expiresAt: formatJwtTimestamp(decodedAccessToken.exp)
-    };
-
-    return {
-        accessToken: formattedAccessToken,
-        user: {
-            id: user._id as unknown as string,
-            email: user.email,
-            username: user.username
-        }
-    };
-  }
-  
   getById = async (id: string) => {
     const movie = await this.movieRepository.getById(id);
     if (!movie) {
@@ -83,8 +34,9 @@ export class MovieService {
     const filters = {};
     return this.movieRepository.find(filters, pagination);
   };
-  createMovie = async (movie: Partial<IMovie>) => {
+  createMovie = async (movie: IMovie) => {
     const filteredMovie = {
+      userId: movie.userId,
       title: movie.title,
       plot: movie.plot,
       directors: movie.directors,
@@ -93,6 +45,8 @@ export class MovieService {
     return await this.movieRepository.create(filteredMovie);
   };
   updateMovie = async (id: string, data: Partial<IMovie>) => {
+    // usuario autenticado que actualiza la movie
+    const userId = data.userId;
     const movietoUpdate = await this.movieRepository.getById(id);
     if (!movietoUpdate) {
       throw new AppError(`Movie with ID ${id} NOT FOUND`, httpStatus.NOT_FOUND);
@@ -109,12 +63,20 @@ export class MovieService {
         throw new AppError(`Movie can't contain banned words: ${prohibitedWords.join(', ')}`, httpStatus.BAD_REQUEST);
       }
     }
+    // validar que la movie pertenece al usuario autenticado
+    if (movietoUpdate.userId.toString() !== userId) {
+      throw new AppError('You are not allowed to modify this movie', httpStatus.FORBIDDEN)
+    }
+
     return this.movieRepository.update(id, data);
   }
-  deleteMovie = async (id: string) => {
+  deleteMovie = async (id: string, userId: string) => {
     const movieToDelete = await this.movieRepository.getById(id);
     if(!movieToDelete) {
       throw new AppError(`Movie with ID ${id} NOT FOUND`, httpStatus.NOT_FOUND);
+    }
+    if (movieToDelete.userId.toString() !== userId ){
+      throw new AppError (`You are not allowed to delete this movie`, httpStatus.FORBIDDEN);
     }
     return this.movieRepository.delete(id);
   }

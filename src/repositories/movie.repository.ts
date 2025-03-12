@@ -2,8 +2,8 @@
 // This layer interacts with the database or a data source to perform CRUD operations.
 
 import {MovieModel, IMovieModel, IRegisterModel } from '../models/movie.model';
-import { IMovie } from '../types/movie.interface';
-import { IRegister } from '../types/register.interface';
+import { IMovie } from '../interfaces/movie.interface';
+import { IRegister } from '../interfaces/register.interface';
 import { BaseRepository } from './base.repository';
 
 export class MovieRepository {
@@ -16,10 +16,6 @@ export class MovieRepository {
     this.defaultProjection = { id: 0, plot: 0, genres: 0, year: 0}; // 🔥 Se excluye __v correctamente
   }
 
-  register = async (registerUser: IRegister) => await this.baseRepository.register(registerUser);
-
-  findByEmail = async (email: string) => await this.baseRepository.findByEmail(email);
-
   getById = async (id: string) => {
     return await this.baseRepository.getById(id, this.defaultProjection);
   };
@@ -31,14 +27,13 @@ export class MovieRepository {
     const options = { ...pagination };
     return this.baseRepository.find<IMovieModel>(filters, this.defaultProjection, options);
   };
-  create = async (movie: Partial<IMovie>) => {
-    const filteredMovie: Partial<IMovie> = {
-      title: movie.title ?? "Unknown Title",
-      plot: movie.plot ?? "No plot available",
-      genres: movie.genres ?? [],
-      year: movie.year ?? new Date().getFullYear(),
-      directors: movie.directors ?? [],
-      released: movie.released ?? new Date(),
+  create = async (movie: IMovie) => {
+    const filteredMovie: IMovie = {
+      userId: movie.userId,
+      title: movie.title,
+      plot: movie.plot,
+      directors: movie.directors,
+      released: movie.released,
     };
 
     return await this.baseRepository.create(filteredMovie);

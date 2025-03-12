@@ -60,37 +60,37 @@ export class MovieValidator {
     num_mflix_comments: Joi.number().integer().min(0).optional(),
   });
 
-  static movieRegisterSchema = Joi.object({
-    username: Joi.string()
-    .pattern(/^[A-Za-z0-9]{3,15}$/) //Entre 3 y 15 palabras y/o números
-    .messages({
-      'string.pattern.base': 'The username must be between 3 and 15 letters with digits without spaces and symbols.',
-      'string.min': 'The username must be at least 3 characters long.',
-      'string.max': 'The maximum length must be 15 characters long.',
-      'any.required': 'The username field is required.'
-    })
-    .required(),
-    password: Joi.string()
-    .pattern(/^[A-Za-z]{6,20}$/) // palabra de entre 6 y 20 letras sin espacios
-    .messages({
-      'string.pattern.base': 'The password must be between 6 and 20 letters without spaces.',
-      'string.min': 'The password must be at least 6 characters long.',
-      'string.max': 'The maximum length must be 20 characters long.',
-      'any.required': 'The password field is required.'
-    })
-    .required(),
-    email: Joi.string().email().required(),
-  })
-  static movieLoginSchema = Joi.object({
-    password: Joi.string()
-    .pattern(/^[A-Za-z]{6,20}$/) // palabra de entre 6 y 20 letras sin espacios
-    .messages({
-      'string.pattern.base': 'The password must be between 6 and 20 letters without spaces.',
-      'string.min': 'The password must be at least 6 characters long.',
-      'string.max': 'The maximum length must be 20 characters long.',
-      'any.required': 'The password field is required.'
-    })
-    .required(),
-    email: Joi.string().email().required(),
-  })
+  // static movieRegisterSchema = Joi.object({
+  //   username: Joi.string()
+  //   .pattern(/^[A-Za-z0-9]{3,15}$/) //Entre 3 y 15 palabras y/o números
+  //   .messages({
+  //     'string.pattern.base': 'The username must be between 3 and 15 letters with digits without spaces and symbols.',
+  //     'string.min': 'The username must be at least 3 characters long.',
+  //     'string.max': 'The maximum length must be 15 characters long.',
+  //     'any.required': 'The username field is required.'
+  //   })
+  //   .required(),
+  //   password: Joi.string()
+  //   .pattern(/^[A-Za-z]{6,20}$/) // palabra de entre 6 y 20 letras sin espacios
+  //   .messages({
+  //     'string.pattern.base': 'The password must be between 6 and 20 letters without spaces.',
+  //     'string.min': 'The password must be at least 6 characters long.',
+  //     'string.max': 'The maximum length must be 20 characters long.',
+  //     'any.required': 'The password field is required.'
+  //   })
+  //   .required(),
+  //   email: Joi.string().email().required(),
+  // })
+  // static movieLoginSchema = Joi.object({
+  //   password: Joi.string()
+  //   .pattern(/^[A-Za-z]{6,20}$/) // palabra de entre 6 y 20 letras sin espacios
+  //   .messages({
+  //     'string.pattern.base': 'The password must be between 6 and 20 letters without spaces.',
+  //     'string.min': 'The password must be at least 6 characters long.',
+  //     'string.max': 'The maximum length must be 20 characters long.',
+  //     'any.required': 'The password field is required.'
+  //   })
+  //   .required(),
+  //   email: Joi.string().email().required(),
+  // })
 }
