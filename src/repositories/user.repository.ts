@@ -3,7 +3,6 @@
 
 import { IUserModel, UserModel } from '../models/user.model';
 import { BaseRepository } from './base.repository';
-// import { IUserDto } from '../interfaces/userDto.interface';
 import { IUser } from '../interfaces/user.interface';
 
 export class UserRepository {

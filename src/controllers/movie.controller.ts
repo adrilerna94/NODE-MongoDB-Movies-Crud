@@ -4,7 +4,7 @@ import { httpStatus } from '../config/httpStatusCodes';
 import { CustomRequest } from '../interfaces/customRequest.interface';
 
 export class MovieController {
-  private movieService: MovieService;
+  private readonly movieService: MovieService;
 
   constructor() {
     this.movieService = new MovieService();
