@@ -7,7 +7,6 @@ import { AppError } from '../utils/application.error';
 import bcrypt from 'bcrypt';
 import { hashPassword } from '../utils/auth/hash';
 import { formatJwtTimestamp, generateAccessToken, parseJwt } from '../utils/auth/token';
-// import { IUserDto } from '../interfaces/userDto.interface';
 import { IUser } from '../interfaces/user.interface';
 import { AuthUserDto } from '../interfaces/authUser.interface';
 
@@ -44,28 +43,27 @@ export class AuthService {
     if (!isMatch) {
         throw new AppError('Invalid Credentials', httpStatus.UNAUTHORIZED);
     }
-    console.log(user);
-
     // Generate JWT Token
     const accessToken = generateAccessToken(user);
-    console.log("Token generado:", accessToken);
 
     // Decodificar el accessToken con seguridad
-    // const decodedAccessToken = parseJwt(accessToken);
+    const decodedAccessToken = parseJwt(accessToken);
 
-    // // Formatear fechas
-    // const formattedAccessToken = {
-    //   token: accessToken,
-    //   issuedAt: formatJwtTimestamp(decodedAccessToken.iat),
-    //   expiresAt: formatJwtTimestamp(decodedAccessToken.exp)
-    // };
+    // Formatear fechas
+    const formattedAccessToken = {
+      token: accessToken,
+      issuedAt: formatJwtTimestamp(decodedAccessToken.iat),
+      expiresAt: formatJwtTimestamp(decodedAccessToken.exp)
+    };
 
     return {
-        accessToken,
+        plainTextToken: accessToken,
+        formattedAccessToken,
         user: {
             id: user._id,
             email: user.email,
-            name: user.name
+            name: user.name,
+            birthday: user.birthday,
         }
     };
 };

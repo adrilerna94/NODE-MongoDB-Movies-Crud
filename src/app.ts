@@ -2,7 +2,6 @@
 
 import express from 'express';
 import { createConnection } from './config/db';
-// import { createConnection } from './config/db.prisma';
 import { baseRouter } from './routes/base.routes';
 
 // Initialize express

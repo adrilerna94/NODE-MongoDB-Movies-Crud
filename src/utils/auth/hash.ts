@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import { IRegister } from '../../interfaces/register.interface';
 import { IUser } from '../../interfaces/user.interface';
 
 export const hashPassword = async (userData: IUser) => {

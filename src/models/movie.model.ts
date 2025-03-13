@@ -8,11 +8,6 @@ export interface IMovieModel extends IMovie, Document {
   _id: mongoose.Types.ObjectId;
 }
 
-// actualizamos Schema para hacer registro user
-  // email: {type: String, required: true},
-  // password: {type: String, required: true},
-  // username: {type: String, required: false},
-
   const movieSchema = new mongoose.Schema({
   // Relación con  el usuario autenticado
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true},

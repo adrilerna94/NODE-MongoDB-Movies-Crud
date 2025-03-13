@@ -9,7 +9,6 @@ import { CustomRequest } from '../interfaces/customRequest.interface';
 
 export const checkToken = async (req: CustomRequest, res: Response, next: NextFunction) => {
   let token = req.header("Authorization");
-  console.log("Raw Authorization Header:", token);
 
   if (!token) {
       return next(new AppError("You must be logged in to access this resource.", httpStatus.UNAUTHORIZED));
@@ -22,8 +21,6 @@ export const checkToken = async (req: CustomRequest, res: Response, next: NextFu
       return next(new AppError("Invalid token format", httpStatus.UNAUTHORIZED));
   }
 
-  console.log("Token limpio antes de verificar:", token);
-
   // 🔹 Verificar que el token tenga 3 partes antes de validarlo
   if (token.split(".").length !== 3) {
       console.error("🔴 ERROR: Token con formato incorrecto:", token);
@@ -32,9 +29,6 @@ export const checkToken = async (req: CustomRequest, res: Response, next: NextFu
 
   try {
       const decoded = verifyToken(token);
-      console.log("Token decodificado en middleware:", decoded);
-      // guardamos token en la request
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       req.userId = decoded.userId;
       next();
   } catch (error) {

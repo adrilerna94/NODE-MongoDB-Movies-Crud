@@ -15,7 +15,6 @@ export const errorMiddleware = (err: Error, req: Request, res: Response, next: N
       error: err.message,
     });
   }
-
   // If it's not a custom error, return a generic error response
   return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
     error: 'Un error inesperado ocurrió, contacta con el administrador del sistema.',

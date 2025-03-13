@@ -4,15 +4,10 @@
 import { httpStatus } from '../config/httpStatusCodes';
 import { AppError } from '../utils/application.error';
 import { MovieRepository } from '../repositories/movie.repository';
-import bcrypt from 'bcrypt';
 import { IMovie } from '../interfaces/movie.interface';
-import { IRegister } from '../interfaces/register.interface';
-import { hashPassword } from '../utils/auth/hash';
-import { ILogin } from '../interfaces/login.interface';
-import { formatJwtTimestamp, generateAccessToken, parseJwt } from '../utils/auth/token';
 
 export class MovieService {
-  private movieRepository: MovieRepository;
+  private readonly movieRepository: MovieRepository;
 
   constructor() {
     this.movieRepository = new MovieRepository();

@@ -1,15 +1,13 @@
 // Handles direct data operations related to users.
 // This layer interacts with the database or a data source to perform CRUD operations.
 
-import {MovieModel, IMovieModel, IRegisterModel } from '../models/movie.model';
+import { MovieModel, IMovieModel } from '../models/movie.model';
 import { IMovie } from '../interfaces/movie.interface';
-import { IRegister } from '../interfaces/register.interface';
 import { BaseRepository } from './base.repository';
 
 export class MovieRepository {
-  // private baseRepository: BaseRepository<IMovieModel>;
-  private baseRepository: BaseRepository<IRegisterModel>;
-  private defaultProjection: { [key: string]: 1 | 0};
+  private readonly baseRepository: BaseRepository<IMovieModel>;
+  private readonly defaultProjection: { [key: string]: 1 | 0};
 
   constructor() {
     this.baseRepository = new BaseRepository(MovieModel);

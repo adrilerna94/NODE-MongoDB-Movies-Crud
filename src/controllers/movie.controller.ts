@@ -1,13 +1,7 @@
-// Manages HTTP requests related to Movies.
-// Contains methods for handling routes like GET, POST, PUT, DELETE for Movies.
-// Delegates business logic to the Movie service.
-
 import { NextFunction, type Request, type Response } from 'express';
-// import { httpStatus } from '../config/httpStatusCodes';
 import { MovieService } from '../services/movie.service';
 import { httpStatus } from '../config/httpStatusCodes';
 import { CustomRequest } from '../interfaces/customRequest.interface';
-// import { Http2ServerResponse } from 'http2';
 
 export class MovieController {
   private movieService: MovieService;
@@ -15,23 +9,6 @@ export class MovieController {
   constructor() {
     this.movieService = new MovieService();
   }
-
-  /* 🛠️ SOLUCIÓN EXPLICADA 🛠️
-      ✅ `user?.username || 'newUser'`
-        - 🔍 Si `user` es `null` o `undefined`, evita errores al acceder a `.username`.
-        - 🔄 Si `user.username` es `undefined`, `null` o `""`, usa `'newUser'` como valor predeterminado.
-
-      ✅ `[username]: user` (Computed Property)
-        - 🏷️ Usa `username` como **clave dinámica** en el objeto.
-        - 📌 Si `username = "JohnDoe"`, la salida será:
-          ```json
-          {
-            "message": "JohnDoe successfully registered",
-            "JohnDoe": { "username": "JohnDoe", "email": "john@example.com" }
-          }
-          ```
-        - ⚡ Hace que la clave del objeto se adapte al nombre de usuario.
-  */
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const movie = await this.movieService.getById(req.params.id);
@@ -71,7 +48,6 @@ export class MovieController {
       const response = {
         message: 'Movies fetched successfully',
         length: movies.length,
-        //data: movies,
         filteredMovies,
         data: movies,
       };

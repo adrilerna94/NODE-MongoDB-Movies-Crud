@@ -15,28 +15,6 @@ export class MovieValidator {
     limit: MovieValidator.limit,
   }).with('skip', 'limit');
 
-  // static movieSchema = Joi.object({
-  //   plot: Joi.string().required(),
-  //   genres: Joi.array().items(Joi.string()).min(1).required(),
-  //   runtime: Joi.number().integer().positive().required(),
-  //   cast: Joi.array().items(Joi.string()).min(1).required(),
-  //   poster: Joi.string().uri().required(),
-  //   title: Joi.string().required(),
-  //   fullplot: Joi.string().required(),
-  //   languages: Joi.array().items(Joi.string()).min(1).required(),
-  //   released: Joi.date().iso().required(),
-  //   directors: Joi.array().items(Joi.string()).min(1).required(),
-  //   rated: Joi.string().required(),
-  //   awards: Joi.object().required(),
-  //   lastupdated: Joi.string().required(),
-  //   year: Joi.number().integer().min(1800).max(new Date().getFullYear()).required(),
-  //   imdb: Joi.object().required(),
-  //   countries: Joi.array().items(Joi.string()).min(1).required(),
-  //   type: Joi.string().valid('movie', 'series', 'documentary').required(),
-  //   tomatoes: Joi.object().required(),
-  //   num_mflix_comments: Joi.number().integer().min(0).required()
-  // });
-
   static movieSchema = Joi.object({
     title: Joi.string().required(),           // ✅ Requerido
     plot: Joi.string().required(),            // ✅ Requerido
@@ -59,38 +37,4 @@ export class MovieValidator {
     tomatoes: Joi.object().optional(),
     num_mflix_comments: Joi.number().integer().min(0).optional(),
   });
-
-  // static movieRegisterSchema = Joi.object({
-  //   username: Joi.string()
-  //   .pattern(/^[A-Za-z0-9]{3,15}$/) //Entre 3 y 15 palabras y/o números
-  //   .messages({
-  //     'string.pattern.base': 'The username must be between 3 and 15 letters with digits without spaces and symbols.',
-  //     'string.min': 'The username must be at least 3 characters long.',
-  //     'string.max': 'The maximum length must be 15 characters long.',
-  //     'any.required': 'The username field is required.'
-  //   })
-  //   .required(),
-  //   password: Joi.string()
-  //   .pattern(/^[A-Za-z]{6,20}$/) // palabra de entre 6 y 20 letras sin espacios
-  //   .messages({
-  //     'string.pattern.base': 'The password must be between 6 and 20 letters without spaces.',
-  //     'string.min': 'The password must be at least 6 characters long.',
-  //     'string.max': 'The maximum length must be 20 characters long.',
-  //     'any.required': 'The password field is required.'
-  //   })
-  //   .required(),
-  //   email: Joi.string().email().required(),
-  // })
-  // static movieLoginSchema = Joi.object({
-  //   password: Joi.string()
-  //   .pattern(/^[A-Za-z]{6,20}$/) // palabra de entre 6 y 20 letras sin espacios
-  //   .messages({
-  //     'string.pattern.base': 'The password must be between 6 and 20 letters without spaces.',
-  //     'string.min': 'The password must be at least 6 characters long.',
-  //     'string.max': 'The maximum length must be 20 characters long.',
-  //     'any.required': 'The password field is required.'
-  //   })
-  //   .required(),
-  //   email: Joi.string().email().required(),
-  // })
 }

@@ -1,7 +1,3 @@
-// Manages HTTP requests related to users.
-// Contains methods for handling routes like GET, POST, PUT, DELETE for users.
-// Delegates business logic to the user service.
-
 import { NextFunction, type Request, type Response } from 'express';
 import { AuthService } from '../services/auth.service';
 
