@@ -4,18 +4,18 @@
 import Joi from 'joi';
 
 export class MovieValidator {
-  private static id = Joi.string().hex().length(24);
-  private static skip = Joi.number().min(0);
-  private static limit = Joi.number().min(1).max(100);
+  private static readonly id = Joi.string().hex().length(24);
+  private static readonly skip = Joi.number().min(0);
+  private static readonly limit = Joi.number().min(1).max(100);
 
-  static movieIdSchema = Joi.object({ id: MovieValidator.id.required() });
+  public static readonly movieIdSchema = Joi.object({ id: MovieValidator.id.required() });
 
-  static moviePaginationSchema = Joi.object({
+  public static  readonly moviePaginationSchema = Joi.object({
     skip: MovieValidator.skip,
     limit: MovieValidator.limit,
   }).with('skip', 'limit');
 
-  static movieSchema = Joi.object({
+  public static readonly movieSchema = Joi.object({
     title: Joi.string().required(),           // ✅ Requerido
     plot: Joi.string().required(),            // ✅ Requerido
     released: Joi.date().iso().required(),    // ✅ Requerido
