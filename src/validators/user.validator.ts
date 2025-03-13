@@ -6,7 +6,7 @@ import Joi from 'joi';
 export class UserValidator {
   private static readonly id = Joi.string();
   private static readonly email = Joi.string().email();
-  private static readonly name = Joi.string().alphanum().min(3).max(30);
+  private static readonly name = Joi.string().pattern(/^[a-zA-Z\s]{3,30}$/);
   private static readonly password = Joi.string();
   private static readonly birthday = Joi.date().iso();
   private static readonly isBlocked = Joi.boolean();
