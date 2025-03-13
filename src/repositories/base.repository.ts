@@ -13,7 +13,7 @@ export class BaseRepository<Document> {
   constructor(model: Model<Document>) {
     this.model = model;
     this.defaultProjection = { __v: 0 };
-    this.registerProjection = { name: 1, password: 1, email: 1, _id: 1, birthday: 1, __v: 0, createdAt: 0 , updatedAt: 0 };
+    this.registerProjection = { name: 1, password: 1, email: 1, birthday: 1 , _id: 1};
   }
 
   register = async (registerUser: IUser) => {
@@ -23,11 +23,10 @@ export class BaseRepository<Document> {
   }
 
   findByEmail = async (email: string) => {
-    const user = await this.model.findOne({ email }, this.registerProjection).lean();
-    if (!user || !user._id) {
-        throw new Error("User ID is missing from database query.");
-    }
-    return { ...user, id: user._id.toString() }; // 🔹 Convertimos `_id` en `id` para usarlo en el token
+    const user = await this.model.findOne({ email }, this.defaultProjection).lean();
+    if (!user) return null;
+    const { _id, ...rest } = user;
+    return { id: _id, ...rest }; //transformo _id por id
   };
 
   getById(id: string, projection?: ProjectionFields<Document>) {

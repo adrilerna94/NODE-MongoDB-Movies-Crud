@@ -27,7 +27,7 @@ export class AuthController {
       const response = {
         message: `${registeredUser?.name} successfully registered`,
         user: {
-          id: registeredUser?._id,
+          id: registeredUser?.id,
           name: registeredUser?.name,
           email: registeredUser?.email,
           password: registeredUser?.password,

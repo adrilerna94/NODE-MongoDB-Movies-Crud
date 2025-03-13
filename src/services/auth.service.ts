@@ -60,7 +60,7 @@ export class AuthService {
         plainTextToken: accessToken,
         formattedAccessToken,
         user: {
-            id: user._id,
+            id: user.id,
             email: user.email,
             name: user.name,
             birthday: user.birthday,
